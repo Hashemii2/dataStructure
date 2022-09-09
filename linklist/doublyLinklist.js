@@ -2,23 +2,25 @@ class Node {
   constructor(value) {
     this.value = value;
     this.next = null;
+    this.previous = null;
   }
 }
 
-class LinkList {
+class DoublyLinkList {
   constructor() {
     this.head = null;
     this.tail = null;
-    this.size = 0;
+    this.size = 1;
   }
 
   addNode(value) {
     const node = new Node(value);
-    if (!this.head) {
+    if (this.head == null) {
       this.head = node;
       this.tail = node;
     } else {
       this.tail.next = node;
+      node.previous = this.tail;
       this.tail = node;
     }
 
@@ -37,6 +39,7 @@ class LinkList {
     }
 
     prev.next = node.next;
+    node.next.previous = prev;
     this.size--;
     return `node ${node.value} from List deleted`;
   }
@@ -46,6 +49,7 @@ class LinkList {
     let [oldNode, prev, counter] = this.findNodeAtIndex(index);
 
     newNode.next = oldNode;
+    newNode.previous = prev;
     prev.next = newNode;
 
     if (counter == this.size - 1) this.tail = newNode;
@@ -58,6 +62,7 @@ class LinkList {
     let node = new Node(value);
 
     node.next = this.head;
+    this.head.previous = node;
     this.head = node;
     this.size++;
   }
@@ -77,53 +82,8 @@ class LinkList {
     return [oldNode, prev, counter];
   }
 
-  // reverse() {
-  //   if (this.size == 1) return this.head;
-  //   let i = 0;
-  //   let size = this.size - 1;
-
-  //   while (i !== size) {
-  //     let fromFirst = this.findIndex(i);
-  //     let fromLast = this.findIndex(size);
-
-  //     fromFirst = fromLast;
-  //     size--;
-  //     i++;
-  //   }
-  // }
-
-  reverse() {
-    if (!this.head.next) {
-      return this.head;
-    }
-
-    let first = this.head;
-    this.tail = this.head;
-    let second = first.next;
-
-    while (second) {
-      let tmp = second.next;
-      second.next = first;
-      first = second;
-      second = tmp;
-    }
-    this.head.next = null;
-    this.head = first;
-  }
-
   findLastNode() {
     return this.tail;
-  }
-
-  findIndex(index) {
-    let node = this.head;
-    let counter = 0;
-
-    while (counter !== index) {
-      counter++;
-      node = node.next;
-    }
-    return node;
   }
 
   toArray() {
@@ -139,15 +99,15 @@ class LinkList {
   }
 }
 
-const linkList = new LinkList();
-linkList.addNode(4);
-linkList.addNode(14);
-linkList.addNode(24);
-linkList.addNode(34);
-linkList.insertFirst(3);
-linkList.insertAt(54, 3);
-linkList.reverse();
+const doublyLinklist = new DoublyLinkList();
+doublyLinklist.addNode(4);
+doublyLinklist.addNode(14);
+doublyLinklist.addNode(24);
+// doublyLinklist.addNode(34);
+doublyLinklist.insertFirst(3);
+doublyLinklist.insertAt(54, 3);
 
-console.log(linkList.removeNode(3));
-console.log(linkList.toArray());
-console.log(linkList);
+console.log(doublyLinklist.removeNode(14));
+
+console.log(doublyLinklist.toArray());
+console.log(doublyLinklist.head.next.next.previous);
